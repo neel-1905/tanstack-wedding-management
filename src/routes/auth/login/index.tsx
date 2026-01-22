@@ -6,9 +6,5 @@ export const Route = createFileRoute('/auth/login/')({
 })
 
 function RouteComponent() {
-  return (
-    <div className="flex-center-col min-h-screen py-10">
-      <LoginForm />
-    </div>
-  )
+  return <LoginForm />
 }

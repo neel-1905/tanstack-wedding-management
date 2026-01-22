@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input'
 import * as z from 'zod'
 import { toast } from 'sonner'
 import { authClient } from '@/lib/auth-client'
-import { useRouter } from '@tanstack/react-router'
+import { Link, useRouter } from '@tanstack/react-router'
 
 const formSchema = z
   .object({
@@ -186,7 +186,7 @@ export function SignUpForm({
               <Field>
                 <Button type="submit">Sign Up</Button>
                 <FieldDescription className="text-center">
-                  Already have an account? <a href="/login">Login</a>
+                  Already have an account? <Link to="/auth/login">Login</Link>
                 </FieldDescription>
               </Field>
             </FieldGroup>
