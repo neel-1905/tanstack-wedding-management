@@ -13,7 +13,11 @@ export const authedMiddleware = createMiddleware().server(
       throw redirect({ to: '/' })
     }
 
-    return await next()
+    return await next({
+      context: {
+        user: session.user,
+      },
+    })
   },
 )
 
