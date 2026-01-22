@@ -4,19 +4,10 @@ import { AppSidebar } from '@/components/sidebar/app-sidebar'
 
 export const Route = createFileRoute('/(authed)/(dashboard)')({
   component: RouteComponent,
-  loader: async ({ serverContext }) => {
-    if (!serverContext) {
-      throw new Error('No server context')
-    }
-
-    return {
-      user: serverContext?.user,
-    }
-  },
 })
 
 function RouteComponent() {
-  const { user } = Route.useLoaderData()
+  const { user } = Route.useRouteContext()
   return (
     <SidebarProvider>
       <AppSidebar user={user} />

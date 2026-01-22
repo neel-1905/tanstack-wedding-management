@@ -17,8 +17,22 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
 import { TUser } from '@/features/auth/domain/auth.types'
+import { authClient } from '@/lib/auth-client'
+import { useNavigate } from '@tanstack/react-router'
 
 export function AppSidebarFooter({ user }: { user: TUser }) {
+  const navigate = useNavigate()
+
+  const handleLogout = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          navigate({ to: '/auth/login' })
+        },
+      },
+    })
+  }
+
   return (
     <SidebarFooter>
       <SidebarMenu>
@@ -77,7 +91,10 @@ export function AppSidebarFooter({ user }: { user: TUser }) {
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-destructive focus:text-destructive">
+              <DropdownMenuItem
+                className="text-destructive focus:text-destructive"
+                onClick={handleLogout}
+              >
                 <LogOut className="mr-2 size-4 text-destructive" />
                 Log out
               </DropdownMenuItem>
