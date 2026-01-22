@@ -10,9 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteRouteImport } from './routes/auth/route'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as authedRouteRouteImport } from './routes/(authed)/route'
+import { Route as autheddashboardRouteRouteImport } from './routes/(authed)/(dashboard)/route'
 import { Route as AuthSignUpIndexRouteImport } from './routes/auth/sign-up/index'
 import { Route as AuthLoginIndexRouteImport } from './routes/auth/login/index'
+import { Route as autheddashboardIndexRouteImport } from './routes/(authed)/(dashboard)/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const AuthRouteRoute = AuthRouteRouteImport.update({
@@ -20,10 +22,13 @@ const AuthRouteRoute = AuthRouteRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const authedRouteRoute = authedRouteRouteImport.update({
+  id: '/(authed)',
   getParentRoute: () => rootRouteImport,
+} as any)
+const autheddashboardRouteRoute = autheddashboardRouteRouteImport.update({
+  id: '/(dashboard)',
+  getParentRoute: () => authedRouteRoute,
 } as any)
 const AuthSignUpIndexRoute = AuthSignUpIndexRouteImport.update({
   id: '/sign-up/',
@@ -35,6 +40,11 @@ const AuthLoginIndexRoute = AuthLoginIndexRouteImport.update({
   path: '/login/',
   getParentRoute: () => AuthRouteRoute,
 } as any)
+const autheddashboardIndexRoute = autheddashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => autheddashboardRouteRoute,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -42,43 +52,47 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
   '/auth': typeof AuthRouteRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/': typeof autheddashboardIndexRoute
   '/auth/login/': typeof AuthLoginIndexRoute
   '/auth/sign-up/': typeof AuthSignUpIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
   '/auth': typeof AuthRouteRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/': typeof autheddashboardIndexRoute
   '/auth/login': typeof AuthLoginIndexRoute
   '/auth/sign-up': typeof AuthSignUpIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/(authed)': typeof authedRouteRouteWithChildren
   '/auth': typeof AuthRouteRouteWithChildren
+  '/(authed)/(dashboard)': typeof autheddashboardRouteRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/(authed)/(dashboard)/': typeof autheddashboardIndexRoute
   '/auth/login/': typeof AuthLoginIndexRoute
   '/auth/sign-up/': typeof AuthSignUpIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/api/auth/$' | '/auth/login/' | '/auth/sign-up/'
+  fullPaths: '/auth' | '/api/auth/$' | '/' | '/auth/login/' | '/auth/sign-up/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/api/auth/$' | '/auth/login' | '/auth/sign-up'
+  to: '/auth' | '/api/auth/$' | '/' | '/auth/login' | '/auth/sign-up'
   id:
     | '__root__'
-    | '/'
+    | '/(authed)'
     | '/auth'
+    | '/(authed)/(dashboard)'
     | '/api/auth/$'
+    | '/(authed)/(dashboard)/'
     | '/auth/login/'
     | '/auth/sign-up/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  authedRouteRoute: typeof authedRouteRouteWithChildren
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
@@ -92,12 +106,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/(authed)': {
+      id: '/(authed)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof authedRouteRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/(authed)/(dashboard)': {
+      id: '/(authed)/(dashboard)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof autheddashboardRouteRouteImport
+      parentRoute: typeof authedRouteRoute
     }
     '/auth/sign-up/': {
       id: '/auth/sign-up/'
@@ -113,6 +134,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginIndexRouteImport
       parentRoute: typeof AuthRouteRoute
     }
+    '/(authed)/(dashboard)/': {
+      id: '/(authed)/(dashboard)/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof autheddashboardIndexRouteImport
+      parentRoute: typeof autheddashboardRouteRoute
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -122,6 +150,29 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface autheddashboardRouteRouteChildren {
+  autheddashboardIndexRoute: typeof autheddashboardIndexRoute
+}
+
+const autheddashboardRouteRouteChildren: autheddashboardRouteRouteChildren = {
+  autheddashboardIndexRoute: autheddashboardIndexRoute,
+}
+
+const autheddashboardRouteRouteWithChildren =
+  autheddashboardRouteRoute._addFileChildren(autheddashboardRouteRouteChildren)
+
+interface authedRouteRouteChildren {
+  autheddashboardRouteRoute: typeof autheddashboardRouteRouteWithChildren
+}
+
+const authedRouteRouteChildren: authedRouteRouteChildren = {
+  autheddashboardRouteRoute: autheddashboardRouteRouteWithChildren,
+}
+
+const authedRouteRouteWithChildren = authedRouteRoute._addFileChildren(
+  authedRouteRouteChildren,
+)
 
 interface AuthRouteRouteChildren {
   AuthLoginIndexRoute: typeof AuthLoginIndexRoute
@@ -138,7 +189,7 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
 )
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  authedRouteRoute: authedRouteRouteWithChildren,
   AuthRouteRoute: AuthRouteRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }

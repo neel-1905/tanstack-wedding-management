@@ -1,3 +1,4 @@
+import { SignUpForm } from '@/features/auth/ui/sign-up-form'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/auth/sign-up/')({
@@ -5,5 +6,9 @@ export const Route = createFileRoute('/auth/sign-up/')({
 })
 
 function RouteComponent() {
-  return <div>Hello "/auth/sign-up/"!</div>
+  return (
+    <div className="flex-center-col min-h-screen py-10">
+      <SignUpForm />
+    </div>
+  )
 }
