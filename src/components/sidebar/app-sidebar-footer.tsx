@@ -45,7 +45,7 @@ export function AppSidebarFooter({ user }: { user: TUser }) {
               >
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage src={user?.image ?? ''} alt={user?.name} />
-                  <AvatarFallback className="rounded-lg bg-pink-100 text-pink-700">
+                  <AvatarFallback className="rounded-lg bg-primary/20 text-pink-700">
                     {user?.name.slice(0, 2).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
@@ -68,7 +68,7 @@ export function AppSidebarFooter({ user }: { user: TUser }) {
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                   <Avatar className="h-8 w-8 rounded-lg">
                     <AvatarImage src={user?.image ?? ''} />
-                    <AvatarFallback className="rounded-lg bg-pink-100 text-pink-700">
+                    <AvatarFallback className="rounded-lg bg-primary/20 text-pink-700">
                       {user?.name.slice(0, 2).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>

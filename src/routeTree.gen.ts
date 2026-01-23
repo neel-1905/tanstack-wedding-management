@@ -11,10 +11,13 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as authedRouteRouteImport } from './routes/(authed)/route'
-import { Route as authedOnboardingRouteImport } from './routes/(authed)/onboarding'
+import { Route as autheddashboardRouteRouteImport } from './routes/(authed)/(dashboard)/route'
 import { Route as AuthSignUpIndexRouteImport } from './routes/auth/sign-up/index'
 import { Route as AuthLoginIndexRouteImport } from './routes/auth/login/index'
+import { Route as autheddashboardIndexRouteImport } from './routes/(authed)/(dashboard)/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as autheddashboardWeddingsIndexRouteImport } from './routes/(authed)/(dashboard)/weddings/index'
+import { Route as autheddashboardWeddingsWeddingIdIndexRouteImport } from './routes/(authed)/(dashboard)/weddings/$weddingId/index'
 
 const AuthRouteRoute = AuthRouteRouteImport.update({
   id: '/auth',
@@ -25,9 +28,8 @@ const authedRouteRoute = authedRouteRouteImport.update({
   id: '/(authed)',
   getParentRoute: () => rootRouteImport,
 } as any)
-const authedOnboardingRoute = authedOnboardingRouteImport.update({
-  id: '/onboarding',
-  path: '/onboarding',
+const autheddashboardRouteRoute = autheddashboardRouteRouteImport.update({
+  id: '/(dashboard)',
   getParentRoute: () => authedRouteRoute,
 } as any)
 const AuthSignUpIndexRoute = AuthSignUpIndexRouteImport.update({
@@ -40,53 +42,89 @@ const AuthLoginIndexRoute = AuthLoginIndexRouteImport.update({
   path: '/login/',
   getParentRoute: () => AuthRouteRoute,
 } as any)
+const autheddashboardIndexRoute = autheddashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => autheddashboardRouteRoute,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const autheddashboardWeddingsIndexRoute =
+  autheddashboardWeddingsIndexRouteImport.update({
+    id: '/weddings/',
+    path: '/weddings/',
+    getParentRoute: () => autheddashboardRouteRoute,
+  } as any)
+const autheddashboardWeddingsWeddingIdIndexRoute =
+  autheddashboardWeddingsWeddingIdIndexRouteImport.update({
+    id: '/weddings/$weddingId/',
+    path: '/weddings/$weddingId/',
+    getParentRoute: () => autheddashboardRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/auth': typeof AuthRouteRouteWithChildren
-  '/onboarding': typeof authedOnboardingRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/': typeof autheddashboardIndexRoute
   '/auth/login/': typeof AuthLoginIndexRoute
   '/auth/sign-up/': typeof AuthSignUpIndexRoute
+  '/weddings/': typeof autheddashboardWeddingsIndexRoute
+  '/weddings/$weddingId/': typeof autheddashboardWeddingsWeddingIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRouteRouteWithChildren
-  '/onboarding': typeof authedOnboardingRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/': typeof autheddashboardIndexRoute
   '/auth/login': typeof AuthLoginIndexRoute
   '/auth/sign-up': typeof AuthSignUpIndexRoute
+  '/weddings': typeof autheddashboardWeddingsIndexRoute
+  '/weddings/$weddingId': typeof autheddashboardWeddingsWeddingIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/(authed)': typeof authedRouteRouteWithChildren
   '/auth': typeof AuthRouteRouteWithChildren
-  '/(authed)/onboarding': typeof authedOnboardingRoute
+  '/(authed)/(dashboard)': typeof autheddashboardRouteRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/(authed)/(dashboard)/': typeof autheddashboardIndexRoute
   '/auth/login/': typeof AuthLoginIndexRoute
   '/auth/sign-up/': typeof AuthSignUpIndexRoute
+  '/(authed)/(dashboard)/weddings/': typeof autheddashboardWeddingsIndexRoute
+  '/(authed)/(dashboard)/weddings/$weddingId/': typeof autheddashboardWeddingsWeddingIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/auth'
-    | '/onboarding'
     | '/api/auth/$'
+    | '/'
     | '/auth/login/'
     | '/auth/sign-up/'
+    | '/weddings/'
+    | '/weddings/$weddingId/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/auth' | '/onboarding' | '/api/auth/$' | '/auth/login' | '/auth/sign-up'
+  to:
+    | '/auth'
+    | '/api/auth/$'
+    | '/'
+    | '/auth/login'
+    | '/auth/sign-up'
+    | '/weddings'
+    | '/weddings/$weddingId'
   id:
     | '__root__'
     | '/(authed)'
     | '/auth'
-    | '/(authed)/onboarding'
+    | '/(authed)/(dashboard)'
     | '/api/auth/$'
+    | '/(authed)/(dashboard)/'
     | '/auth/login/'
     | '/auth/sign-up/'
+    | '/(authed)/(dashboard)/weddings/'
+    | '/(authed)/(dashboard)/weddings/$weddingId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -111,11 +149,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/(authed)/onboarding': {
-      id: '/(authed)/onboarding'
-      path: '/onboarding'
-      fullPath: '/onboarding'
-      preLoaderRoute: typeof authedOnboardingRouteImport
+    '/(authed)/(dashboard)': {
+      id: '/(authed)/(dashboard)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof autheddashboardRouteRouteImport
       parentRoute: typeof authedRouteRoute
     }
     '/auth/sign-up/': {
@@ -132,6 +170,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginIndexRouteImport
       parentRoute: typeof AuthRouteRoute
     }
+    '/(authed)/(dashboard)/': {
+      id: '/(authed)/(dashboard)/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof autheddashboardIndexRouteImport
+      parentRoute: typeof autheddashboardRouteRoute
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -139,15 +184,45 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(authed)/(dashboard)/weddings/': {
+      id: '/(authed)/(dashboard)/weddings/'
+      path: '/weddings'
+      fullPath: '/weddings/'
+      preLoaderRoute: typeof autheddashboardWeddingsIndexRouteImport
+      parentRoute: typeof autheddashboardRouteRoute
+    }
+    '/(authed)/(dashboard)/weddings/$weddingId/': {
+      id: '/(authed)/(dashboard)/weddings/$weddingId/'
+      path: '/weddings/$weddingId'
+      fullPath: '/weddings/$weddingId/'
+      preLoaderRoute: typeof autheddashboardWeddingsWeddingIdIndexRouteImport
+      parentRoute: typeof autheddashboardRouteRoute
+    }
   }
 }
 
+interface autheddashboardRouteRouteChildren {
+  autheddashboardIndexRoute: typeof autheddashboardIndexRoute
+  autheddashboardWeddingsIndexRoute: typeof autheddashboardWeddingsIndexRoute
+  autheddashboardWeddingsWeddingIdIndexRoute: typeof autheddashboardWeddingsWeddingIdIndexRoute
+}
+
+const autheddashboardRouteRouteChildren: autheddashboardRouteRouteChildren = {
+  autheddashboardIndexRoute: autheddashboardIndexRoute,
+  autheddashboardWeddingsIndexRoute: autheddashboardWeddingsIndexRoute,
+  autheddashboardWeddingsWeddingIdIndexRoute:
+    autheddashboardWeddingsWeddingIdIndexRoute,
+}
+
+const autheddashboardRouteRouteWithChildren =
+  autheddashboardRouteRoute._addFileChildren(autheddashboardRouteRouteChildren)
+
 interface authedRouteRouteChildren {
-  authedOnboardingRoute: typeof authedOnboardingRoute
+  autheddashboardRouteRoute: typeof autheddashboardRouteRouteWithChildren
 }
 
 const authedRouteRouteChildren: authedRouteRouteChildren = {
-  authedOnboardingRoute: authedOnboardingRoute,
+  autheddashboardRouteRoute: autheddashboardRouteRouteWithChildren,
 }
 
 const authedRouteRouteWithChildren = authedRouteRoute._addFileChildren(
