@@ -1,5 +1,13 @@
 import { relations } from 'drizzle-orm'
-import { pgTable, text, timestamp, boolean, index } from 'drizzle-orm/pg-core'
+import {
+  pgTable,
+  text,
+  timestamp,
+  boolean,
+  index,
+  date,
+  integer,
+} from 'drizzle-orm/pg-core'
 
 export const user = pgTable('user', {
   id: text('id').primaryKey(),
@@ -95,4 +103,165 @@ export const accountRelations = relations(account, ({ one }) => ({
     fields: [account.userId],
     references: [user.id],
   }),
+}))
+
+export const groups = pgTable(
+  'groups',
+  {
+    id: text('id').primaryKey(),
+    name: text('name').notNull(),
+
+    createdBy: text('created_by')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (t) => [index('groups_created_by_idx').on(t.createdBy)],
+)
+
+export const groupMembers = pgTable(
+  'group_members',
+  {
+    id: text('id').primaryKey(),
+
+    groupId: text('group_id')
+      .notNull()
+      .references(() => groups.id, { onDelete: 'cascade' }),
+
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+
+    isAdmin: boolean('is_admin').default(false).notNull(),
+
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+  },
+  (t) => [
+    index('group_members_group_idx').on(t.groupId),
+    index('group_members_user_idx').on(t.userId),
+  ],
+)
+
+export const weddings = pgTable(
+  'weddings',
+  {
+    id: text('id').primaryKey(),
+
+    groupId: text('group_id')
+      .notNull()
+      .references(() => groups.id, { onDelete: 'cascade' }),
+
+    title: text('title').notNull(),
+
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (t) => [index('weddings_group_idx').on(t.groupId)],
+)
+
+export const events = pgTable(
+  'events',
+  {
+    id: text('id').primaryKey(),
+
+    weddingId: text('wedding_id')
+      .notNull()
+      .references(() => weddings.id, { onDelete: 'cascade' }),
+
+    name: text('name').notNull(),
+    eventDate: date('event_date'),
+    order: integer('order').default(0),
+
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (t) => [index('events_wedding_idx').on(t.weddingId)],
+)
+
+export const goods = pgTable(
+  'goods',
+  {
+    id: text('id').primaryKey(),
+
+    eventId: text('event_id')
+      .notNull()
+      .references(() => events.id, { onDelete: 'cascade' }),
+
+    name: text('name').notNull(),
+    quantity: integer('quantity').default(1).notNull(),
+
+    status: text('status').default('pending').notNull(),
+    // pending | bought | delivered
+
+    assignedTo: text('assigned_to').references(() => user.id),
+
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (t) => [index('goods_event_idx').on(t.eventId)],
+)
+
+export const tasks = pgTable(
+  'tasks',
+  {
+    id: text('id').primaryKey(),
+
+    eventId: text('event_id')
+      .notNull()
+      .references(() => events.id, { onDelete: 'cascade' }),
+
+    title: text('title').notNull(),
+    description: text('description'),
+
+    assignedTo: text('assigned_to').references(() => user.id),
+
+    status: text('status').default('pending').notNull(),
+    // pending | in_progress | done
+
+    dueDate: date('due_date'),
+
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (t) => [index('tasks_event_idx').on(t.eventId)],
+)
+
+export const groupRelations = relations(groups, ({ many }) => ({
+  members: many(groupMembers),
+  weddings: many(weddings),
+}))
+
+export const weddingRelations = relations(weddings, ({ many, one }) => ({
+  group: one(groups, {
+    fields: [weddings.groupId],
+    references: [groups.id],
+  }),
+  events: many(events),
+}))
+
+export const eventRelations = relations(events, ({ many, one }) => ({
+  wedding: one(weddings, {
+    fields: [events.weddingId],
+    references: [weddings.id],
+  }),
+
+  eventGoods: many(goods),
+  eventTasks: many(tasks),
 }))
